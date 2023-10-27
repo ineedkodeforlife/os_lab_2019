@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <string.c>
-
+#include <revert_string.c>
 #include "revert_string.h"
 
 int main(int argc, char *argv[])
