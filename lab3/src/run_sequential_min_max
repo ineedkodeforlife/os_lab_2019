@@ -1,0 +1,9 @@
+#include <stdio.h>
+#include <unistd.h>
+
+int main(int argc, char *argv[]) {
+    printf("Running sequential_min_max...\n");
+    char *args[] = {"./sequential_min_max", argv[1], argv[2], NULL};
+    execvp(args[0], args);
+    return 0;
+}
