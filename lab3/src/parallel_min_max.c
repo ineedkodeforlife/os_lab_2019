@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
 
 #include <sys/time.h>
 #include <sys/types.h>
@@ -20,6 +21,7 @@ int main(int argc, char **argv) {
   int array_size = -1;
   int pnum = -1;
   bool with_files = false;
+  int timeout = -1;
 
   while (true) {
     int current_optind = optind ? optind : 1;
@@ -27,6 +29,7 @@ int main(int argc, char **argv) {
     static struct option options[] = {{"seed", required_argument, 0, 0},
                                       {"array_size", required_argument, 0, 0},
                                       {"pnum", required_argument, 0, 0},
+                                      {"timeout", required_argument, 0, 0},
                                       {"by_files", no_argument, 0, 'f'},
                                       {0, 0, 0, 0}};
 
@@ -62,6 +65,14 @@ int main(int argc, char **argv) {
           case 3:
             with_files = true;
             break;
+
+          case 4:
+            timeout = atoi(optarg);
+            if (timeout <= 0) {
+              printf("Timeout must be a positive number\n");
+              return 1;
+          }
+          break;
 
           default:
             printf("Index %d is out of options\n", option_index);
@@ -199,6 +210,15 @@ int main(int argc, char **argv) {
 
   double elapsed_time = (finish_time.tv_sec - start_time.tv_sec) * 1000.0;
   elapsed_time += (finish_time.tv_usec - start_time.tv_usec) / 1000.0;
+
+
+  //Проверка таймаута и отправка сигнала
+  if (timeout > 0 && elapsed_time > timeout) {
+    printf("Timeout reached! Sending SIGKILL to child processes.\n");
+    for (int i = 0; i < pnum; i++) {
+      kill(child_pids[i], SIGKILL);
+    }
+  }
 
   free(array);
 
