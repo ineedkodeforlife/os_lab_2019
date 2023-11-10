@@ -33,9 +33,17 @@ uint64_t MultModulo(uint64_t a, uint64_t b, uint64_t mod) {
 }
 
 uint64_t Factorial(const struct FactorialArgs *args) {
+  //pthread_mutex_lock(&mut);
   uint64_t ans = 1;
-
-  // TODO: your code here
+  // TODO: your code here 
+  int multy;
+  for(int i=args->begin;i<args->end;i++ ){
+    multy=i;
+    if (multy % args->mod == 0) multy = 1;
+    ans *= multy % args->mod;
+  }
+  //ans = ans % args->mod;
+  printf("part fact  %ld\n", ans);
 
   return ans;
 }
@@ -67,11 +75,17 @@ int main(int argc, char **argv) {
       switch (option_index) {
       case 0:
         port = atoi(optarg);
-        // TODO: your code here
+        if (port <= 0) {
+          printf("port is a positive number\n");
+          return 1;
+        }
         break;
       case 1:
         tnum = atoi(optarg);
-        // TODO: your code here
+        if (tnum <= 0) {
+          printf("tnum is a positive number\n");
+          return 1;
+        }
         break;
       default:
         printf("Index %d is out of options\n", option_index);
