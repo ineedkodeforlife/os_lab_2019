@@ -79,6 +79,7 @@ int main(int argc, char **argv) {
           if (mod <= 0) {
           printf("mod is a positive number\n");
           return 1;
+          }
         break;
       case 2:
         // TODO: your code here
@@ -190,5 +191,4 @@ int main(int argc, char **argv) {
   printf("answerall: %lu\n", answerall);
   free(to);
   return 0;
-}
 }
