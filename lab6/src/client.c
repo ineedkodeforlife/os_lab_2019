@@ -11,6 +11,7 @@
 #include <netinet/ip.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 
 struct Server {
   char ip[255];
@@ -118,9 +119,7 @@ int main(int argc, char **argv) {
   // TODO: work continiously, rewrite to make parallel
   int active_child_processes = 0;
 
-    
-  
-   for (int i = 0; i < servers_num; i++) {
+  for (int i = 0; i < servers_num; i++) {
     pid_t child_pid = fork();
     if (child_pid >= 0) {
       active_child_processes += 1;
@@ -172,10 +171,8 @@ int main(int argc, char **argv) {
         // unite results
         uint64_t answer = 0;
         memcpy(&answer, response, sizeof(uint64_t));
-        answerall*=answer;
-        answerall=answerall % mod;
         close(sck);
-        return 0;
+        exit(answer % mod);
       }
     }
     else {
@@ -183,9 +180,16 @@ int main(int argc, char **argv) {
       return 1;
     }
   }
+
   while (active_child_processes > 0) {
-    // your code here
-    wait(NULL);
+    int status;
+    wait(&status);
+    if (WIFEXITED(status)) {
+      int exit_code = WEXITSTATUS(status);
+      // TODO: process exit code
+      answerall *= exit_code;
+      answerall = answerall % mod;
+    }
     active_child_processes--;
   }
   printf("answerall: %lu\n", answerall);
