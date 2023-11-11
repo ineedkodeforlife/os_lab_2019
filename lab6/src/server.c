@@ -37,11 +37,12 @@ uint64_t Factorial(const struct FactorialArgs *args) {
   uint64_t ans = 1;
   // TODO: your code here 
   int multy;
-  for(int i=args->begin;i<args->end;i++ ){
-    multy=i;
-    if (multy % args->mod == 0) multy = 1;
-    ans *= multy % args->mod;
-  }
+for (int i = args->begin; i < args->end; i++) {
+  multy = i % args->mod;
+  if (multy == 0) multy = 1;
+  ans = MultModulo(ans, multy, args->mod);
+}
+
   //ans = ans % args->mod;
   printf("part fact  %ld\n", ans);
 
