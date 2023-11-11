@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
   memset(&servaddr, 0, SIZE);
   servaddr.sin_family = AF_INET;
 
-  if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) <= 0) {
+  if (inet_pton(AF_INET, argv[2], &servaddr.sin_addr) <= 0) {
     perror("bad address");
     exit(1);
   }
@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
   }
 
   write(1, "Input message to send\n", 22);
-  while ((nread = read(0, buf, BUFSIZE)) > 0) {
+  while ((nread = read(0, buf, buf_size)) > 0) {
     if (write(fd, buf, nread) < 0) {
       perror("write");
       exit(1);
