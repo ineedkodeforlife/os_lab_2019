@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
       exit(1);
   }
   
-  char sendline[BUFSIZE], recvline[BUFSIZE + 1];
+  char sendline[buf_size], recvline[buf_size + 1];
   struct sockaddr_in servaddr;
   struct sockaddr_in cliaddr;
 
@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
 
   memset(&servaddr, 0, sizeof(servaddr));
   servaddr.sin_family = AF_INET;
-  servaddr.sin_port = htons(SERV_PORT);
+  servaddr.sin_port = htons(serv_port);
 
   if (inet_pton(AF_INET, argv[1], &servaddr.sin_addr) < 0) {
     perror("inet_pton problem");
@@ -55,13 +55,13 @@ int main(int argc, char **argv) {
 
   write(1, "Enter string\n", 13);
 
-  while ((n = read(0, sendline, BUFSIZE)) > 0) {
+  while ((n = read(0, sendline, buf_size)) > 0) {
     if (sendto(sockfd, sendline, n, 0, (SADDR *)&servaddr, SLEN) == -1) {
       perror("sendto problem");
       exit(1);
     }
 
-    if (recvfrom(sockfd, recvline, BUFSIZE, 0, NULL, NULL) == -1) {
+    if (recvfrom(sockfd, recvline, buf_size, 0, NULL, NULL) == -1) {
       perror("recvfrom problem");
       exit(1);
     }
