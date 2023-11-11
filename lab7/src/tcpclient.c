@@ -7,14 +7,20 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define BUFSIZE 100
+// #define BUFSIZE 100
 #define SADDR struct sockaddr
 #define SIZE sizeof(struct sockaddr_in)
 
 int main(int argc, char *argv[]) {
   int fd;
   int nread;
-  char buf[BUFSIZE];
+  int buf_size = atoi(argv[1]);
+  if (buf_size <= 0)
+  {
+      printf("Size of buffer must be positive number\n");
+      exit(1);
+  }
+  char buf[buf_size];
   struct sockaddr_in servaddr;
   if (argc < 3) {
     printf("Too few arguments \n");
