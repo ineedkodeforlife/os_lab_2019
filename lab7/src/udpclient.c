@@ -9,13 +9,28 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define SERV_PORT 20001
-#define BUFSIZE 1024
+// #define SERV_PORT 20001
+// #define BUFSIZE 1024
 #define SADDR struct sockaddr
 #define SLEN sizeof(struct sockaddr_in)
 
 int main(int argc, char **argv) {
   int sockfd, n;
+
+  int buf_size = atoi(argv[1]);
+  if (buf_size <= 0)
+  {
+      printf("Size of buffer must be positive number\n");
+      exit(1);
+  }
+
+  int serv_port = atoi(argv[3]);
+  if (serv_port <= 1024)
+  {
+      printf("Port of the server must be > 1024\n");
+      exit(1);
+  }
+  
   char sendline[BUFSIZE], recvline[BUFSIZE + 1];
   struct sockaddr_in servaddr;
   struct sockaddr_in cliaddr;
